@@ -17,7 +17,10 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'defaults' => [
+        'guard' => 'api',
+    ],
+    
     /*
     |--------------------------------------------------------------------------
     | Application Environment
