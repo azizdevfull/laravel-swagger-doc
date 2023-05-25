@@ -7,9 +7,71 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use OpenApi\Annotations as OA;
+
+    /**
+     * @OA\Info(
+     *     title="Laravel Sanctum Authentication API",
+     *     version="1.0.0",
+     *     description="API endpoints for user authentication using Laravel Sanctum"
+     * )
+     */
 
 class AuthController extends Controller
 {
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Authentication"},
+     *     summary="Register a new user",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         ),
+     *         description="User's name"
+     *     ),
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="email"
+     *         ),
+     *         description="User's email address"
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="password"
+     *         ),
+     *         description="User's password"
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="token",
+     *                 type="string",
+     *                 description="Authentication token for the registered user"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid input data"
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -29,6 +91,48 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 201);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Authentication"},
+     *     summary="Authenticate user and obtain token",
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="email"
+     *         ),
+     *         description="User's email address"
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="password"
+     *         ),
+     *         description="User's password"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User authenticated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="token",
+     *                 type="string",
+     *                 description="Authentication token for the user"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials"
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $request->validate([
